@@ -1,19 +1,39 @@
 import React from "react";
-const Login = () => {
+
+const Login = ({ onSubmitLogIn, onSubmitSignUp }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   return (
-    <div>
-      <input value={username} onChange={(e) => setUsername(e.target.value)} />
-      <br />
+    <>
       <input
-        value={password}
+        className="border-black border-2 rounded m-1 p-1"
+        value={username}
         onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        className="border-black border-2 rounded m-1 p-1"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         type={"password"}
       />
-      <br />
-      <input type={"submit"} />
-    </div>
+      <button
+        className="border-black border-2 align-center rounded-md m-1 p-1 bg-blue-900 text-white w-11/12 text-center"
+        type={"submit"}
+        onClick={() => {
+          onSubmitLogIn({ username, password });
+        }}
+      >
+        Log In
+      </button>
+      <button
+        className="border-black border-2 align-center rounded-md m-1 p-1 bg-green-600 text-white w-11/12 text-center"
+        onClick={() => {
+          onSubmitSignUp({ username, password });
+        }}
+      >
+        Sign Up
+      </button>
+    </>
   );
 };
 
