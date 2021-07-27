@@ -34,4 +34,15 @@ export default async (req, res) => {
     await redis.set(key, JSON.stringify({ list: [...newList] }));
     res.status(200).json({ list: [data, ...list] });
   }
+  if (type === "updateIsDone") {
+    const { id } = JSON.parse(req.body);
+    const dataList = await redis.get(key);
+    const { list } = JSON.parse(dataList);
+    const newList = list.map((item) =>
+      item.id === id ? { ...item, isDone: !item.isDone } : item
+    );
+    console.log(list, newList, id, "data");
+    await redis.set(key, JSON.stringify({ list: [...newList] }));
+    res.status(200).json({ list: [...newList] });
+  }
 };

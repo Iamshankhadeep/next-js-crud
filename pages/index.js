@@ -99,6 +99,20 @@ export default function Home() {
     setDate(new Date().toISOString().slice(0, 16));
   };
 
+  const onListUpdateIsDone = async (id) => {
+    const response = await fetch("/api/list", {
+      method: "POST",
+      body: JSON.stringify({
+        type: "updateIsDone",
+        id,
+        username,
+      }),
+    });
+    const data = await response.json();
+    console.log(data, id, "data on list delete");
+    await getTodoList();
+  };
+
   useEffect(() => {
     getTodoList();
   }, []);
@@ -147,13 +161,24 @@ export default function Home() {
                 {listData
                   ? listData.map((item, index) => (
                       <li className="w-full" key={item.id}>
-                        <strong>{item.title}</strong>
+                        <strong
+                          id={item.id}
+                          onClick={(e) => {
+                            console.log(e);
+                            onListUpdateIsDone(e.target.id);
+                          }}
+                          className={item.isDone ? "line-through" : ""}
+                        >{`${item.title}`}</strong>
                         <button
                           name={item.id}
                           onClick={(e) => {
                             onListDelete(e.target.name);
                             // console.log(e);
                           }}
+                          disabled={
+                            new Date().getTime() >=
+                            new Date(item.expiresAt).getTime()
+                          }
                           className="border-black border-2 align-center text-white self-end rounded-md m-1 p-1 bg-red-900"
                         >
                           delete
@@ -170,10 +195,18 @@ export default function Home() {
                             setAddTodo(e.target.name);
                             setUpdateId(id);
                           }}
+                          disabled={
+                            new Date().getTime() >=
+                            new Date(item.expiresAt).getTime()
+                          }
                           className="border-black border-2 align-center rounded-md m-1 p-1 bg-green-600 text-white text-center"
                         >
                           update
                         </button>
+                        {new Date().getTime() >=
+                        new Date(item.expiresAt).getTime()
+                          ? "(expired)"
+                          : null}
                       </li>
                     ))
                   : null}
