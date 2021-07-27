@@ -184,7 +184,11 @@ export default function Home() {
                               onListUpdateIsDone(e.target.id);
                             }
                           }}
-                          className={item.isDone ? "line-through" : ""}
+                          className={
+                            item.isDone
+                              ? "line-through cursor-pointer"
+                              : "cursor-pointer"
+                          }
                         >{`${item.title}`}</strong>
                         <button
                           name={item.id}
