@@ -113,6 +113,12 @@ export default function Home() {
     await getTodoList();
   };
 
+  const resetButton = () => {
+    setUpdateId("");
+    setAddTodo("");
+    setDate(new Date().toISOString().slice(0, 16));
+  };
+
   useEffect(() => {
     getTodoList();
   }, []);
@@ -154,6 +160,12 @@ export default function Home() {
               >
                 {updateId ? "Update" : "Add Todo"}
               </button>
+              <button
+                onClick={resetButton}
+                className="border-black border-2 align-center rounded-md m-1 p-1 bg-blue-600 text-white text-center"
+              >
+                Reset
+              </button>
             </div>
             <hr className="w-1" />
             <div className="flex-col w-10/12">
@@ -164,8 +176,13 @@ export default function Home() {
                         <strong
                           id={item.id}
                           onClick={(e) => {
-                            console.log(e);
-                            onListUpdateIsDone(e.target.id);
+                            if (
+                              new Date().getTime() <
+                              new Date(item.expiresAt).getTime()
+                            ) {
+                              console.log(e);
+                              onListUpdateIsDone(e.target.id);
+                            }
                           }}
                           className={item.isDone ? "line-through" : ""}
                         >{`${item.title}`}</strong>
@@ -173,6 +190,7 @@ export default function Home() {
                           name={item.id}
                           onClick={(e) => {
                             onListDelete(e.target.name);
+
                             // console.log(e);
                           }}
                           disabled={
